@@ -57,6 +57,9 @@ static CGSize kWindowMarginSize;
 
 @implementation MTPopupWindow
 
+@synthesize fileName = _fileName;
+@synthesize webView = _webView;
+
 + (void)initialize
 {
     kWindowMarginSize = CGSizeMake(kDefaultMargin, kDefaultMargin);
@@ -70,9 +73,6 @@ static CGSize kWindowMarginSize;
 +(MTPopupWindow*)showWindowWithHTMLFile:(NSString*)fileName
 {
     UIView* view = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
-    if ([UIApplication sharedApplication].statusBarHidden==NO) {
-        [self setWindowMargin:CGSizeMake(kWindowMarginSize.width, 50)];
-    }
     return [self showWindowWithHTMLFile:fileName insideView:view];
 }
 
@@ -83,9 +83,16 @@ static CGSize kWindowMarginSize;
  */
 +(MTPopupWindow*)showWindowWithHTMLFile:(NSString*)fileName insideView:(UIView*)view
 {
+    if ([UIApplication sharedApplication].statusBarHidden==NO) {
+        [self setWindowMargin:CGSizeMake(kWindowMarginSize.width, 50)];
+    }
+
     //initialize the popup window
     MTPopupWindow* popup = [[MTPopupWindow alloc] initWithFile:fileName];
-    [popup setTranslatesAutoresizingMaskIntoConstraints:NO];
+    
+    if ([popup respondsToSelector:@selector(setTranslatesAutoresizingMaskIntoConstraints:)]) {
+        [popup setTranslatesAutoresizingMaskIntoConstraints:NO];
+    }
 
     //setup and show
     [popup showInView: view];
@@ -341,7 +348,9 @@ static CGSize kWindowMarginSize;
     
     //create button instance
     MTPopupWindowCloseButton* closeBtn = [MTPopupWindowCloseButton buttonWithType:UIButtonTypeCustom];
-    [closeBtn setTranslatesAutoresizingMaskIntoConstraints:NO];
+    if ([closeBtn respondsToSelector:@selector(setTranslatesAutoresizingMaskIntoConstraints:)]) {
+        [closeBtn setTranslatesAutoresizingMaskIntoConstraints:NO];
+    }
     [v addSubview: closeBtn];
 
     //create the contraints to stick the button
@@ -440,7 +449,9 @@ static CGSize kWindowMarginSize;
 
 -(void)layoutCenterInView:(UIView*)v
 {
-    [self setTranslatesAutoresizingMaskIntoConstraints:NO];
+    if ([self respondsToSelector:@selector(setTranslatesAutoresizingMaskIntoConstraints:)]) {
+        [self setTranslatesAutoresizingMaskIntoConstraints:NO];
+    }
     
     NSLayoutConstraint* centerX = [NSLayoutConstraint constraintWithItem: self
                                                                attribute: NSLayoutAttributeCenterX
@@ -466,7 +477,9 @@ static CGSize kWindowMarginSize;
 
 -(void)layoutInView:(UIView*)v setSize:(CGSize)s
 {
-    [self setTranslatesAutoresizingMaskIntoConstraints:NO];
+    if ([self respondsToSelector:@selector(setTranslatesAutoresizingMaskIntoConstraints:)]) {
+        [self setTranslatesAutoresizingMaskIntoConstraints:NO];
+    }
     
     NSLayoutConstraint* wwidth = [NSLayoutConstraint constraintWithItem: self
                                                               attribute: NSLayoutAttributeWidth
@@ -496,7 +509,9 @@ static CGSize kWindowMarginSize;
 
 -(void)layoutMaximizeInView:(UIView*)v withInsetSize:(CGSize)insetSize
 {
-    [self setTranslatesAutoresizingMaskIntoConstraints:NO];
+    if ([self respondsToSelector:@selector(setTranslatesAutoresizingMaskIntoConstraints:)]) {
+        [self setTranslatesAutoresizingMaskIntoConstraints:NO];
+    }
     
     NSLayoutConstraint* centerX = [NSLayoutConstraint constraintWithItem: self
                                                                attribute: NSLayoutAttributeCenterX
