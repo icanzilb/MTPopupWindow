@@ -70,9 +70,6 @@ static CGSize kWindowMarginSize;
 +(MTPopupWindow*)showWindowWithHTMLFile:(NSString*)fileName
 {
     UIView* view = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
-    if ([UIApplication sharedApplication].statusBarHidden==NO) {
-        [self setWindowMargin:CGSizeMake(kWindowMarginSize.width, 50)];
-    }
     return [self showWindowWithHTMLFile:fileName insideView:view];
 }
 
@@ -83,6 +80,10 @@ static CGSize kWindowMarginSize;
  */
 +(MTPopupWindow*)showWindowWithHTMLFile:(NSString*)fileName insideView:(UIView*)view
 {
+    if ([UIApplication sharedApplication].statusBarHidden==NO) {
+        [self setWindowMargin:CGSizeMake(kWindowMarginSize.width, 50)];
+    }
+
     //initialize the popup window
     MTPopupWindow* popup = [[MTPopupWindow alloc] initWithFile:fileName];
     [popup setTranslatesAutoresizingMaskIntoConstraints:NO];
