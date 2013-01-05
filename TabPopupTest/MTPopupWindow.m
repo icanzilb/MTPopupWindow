@@ -59,6 +59,8 @@ static CGSize kWindowMarginSize;
 
 @synthesize fileName = _fileName;
 @synthesize webView = _webView;
+@synthesize usesSafari = _usesSafari;
+@synthesize delegate = _delegate;
 
 + (void)initialize
 {
@@ -216,6 +218,10 @@ static CGSize kWindowMarginSize;
 
     //animate the popup window in
     [self performSelector:@selector(animatePopup:) withObject:v afterDelay:0.01];
+  
+    // Attempt to alert the delegate.
+    if ([_delegate respondsToSelector:@selector(didShowMTPopupWindow:)])
+      [_delegate didShowMTPopupWindow:self];
 }
 
 /**
@@ -299,6 +305,10 @@ static CGSize kWindowMarginSize;
                         [_dimView removeFromSuperview];
                         _dimView = nil;
                     }];
+  
+    // Attempt to alert the delegate.
+    if ([_delegate respondsToSelector:@selector(didCloseMTPopupWindow:)])
+      [_delegate didCloseMTPopupWindow:self];
 }
 
 /**
@@ -327,6 +337,18 @@ static CGSize kWindowMarginSize;
                       otherButtonTitles: nil] show];
     
     if (_loader) [_loader removeFromSuperview];
+}
+
+-(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType;
+{
+  if (self.usesSafari) {
+    NSURL *requestURL =[request URL];
+    if (([[requestURL scheme] isEqualToString: @"http"]) && (navigationType == UIWebViewNavigationTypeLinkClicked)) {
+      return ![[UIApplication sharedApplication] openURL:requestURL];
+    }
+    return YES;
+  }
+  return YES;
 }
 
 @end

@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MTPopupWindow.h"
 
-@interface SecondViewController : UIViewController
+@interface SecondViewController : UIViewController <MTPopupWindowDelegate>
+- (IBAction)useSafariButtonPressed:(id)sender;
+- (IBAction)useDelegateButtonPressed:(id)sender;
 
 @end
