@@ -341,14 +341,14 @@ static CGSize kWindowMarginSize;
 
 -(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType;
 {
-  if (self.usesSafari) {
-    NSURL *requestURL =[request URL];
-    if (([[requestURL scheme] isEqualToString: @"http"]) && (navigationType == UIWebViewNavigationTypeLinkClicked)) {
-      return ![[UIApplication sharedApplication] openURL:requestURL];
+    if (self.usesSafari) {
+      NSURL *requestURL =[request URL];
+      if (([[requestURL scheme] hasPrefix:@"http"]) && (navigationType == UIWebViewNavigationTypeLinkClicked)) {
+        return ![[UIApplication sharedApplication] openURL:requestURL];
+      }
+      return YES;
     }
     return YES;
-  }
-  return YES;
 }
 
 @end
