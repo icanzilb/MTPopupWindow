@@ -43,6 +43,9 @@
 
 #pragma mark - webview delegate methods
 
+// To really see the difference between "will show" and "did show" it is helpful
+// to set the animation transistion to a longer time.
+
 - (void) didShowMTPopupWindow:(MTPopupWindow*)sender {
     [[[UIAlertView alloc] initWithTitle:@"MTPopupWindow Delegate"
                                 message:@"MTPopupWindow Showed"
@@ -58,5 +61,23 @@
                       cancelButtonTitle:@"OK"
                       otherButtonTitles:nil] show];
 }
+
+/*
+- (void) willShowMTPopupWindow:(MTPopupWindow*)sender {
+  [[[UIAlertView alloc] initWithTitle:@"MTPopupWindow Delegate"
+                              message:@"MTPopupWindow will show"
+                             delegate:self
+                    cancelButtonTitle:@"OK"
+                    otherButtonTitles:nil] show];
+}
+
+- (void) willCloseMTPopupWindow:(MTPopupWindow*)sender {
+  [[[UIAlertView alloc] initWithTitle:@"MTPopupWindow Delegate"
+                              message:@"MTPopupWindow will close"
+                             delegate:self
+                    cancelButtonTitle:@"OK"
+                    otherButtonTitles:nil] show];
+}
+*/
 
 @end

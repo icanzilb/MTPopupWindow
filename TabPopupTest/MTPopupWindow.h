@@ -26,7 +26,9 @@
  */
 @protocol MTPopupWindowDelegate <NSObject>
 @optional
+- (void) willShowMTPopupWindow:(MTPopupWindow*)sender;
 - (void) didShowMTPopupWindow:(MTPopupWindow*)sender;
+- (void) willCloseMTPopupWindow:(MTPopupWindow*)sender;
 - (void) didCloseMTPopupWindow:(MTPopupWindow*)sender;
 @end
 
