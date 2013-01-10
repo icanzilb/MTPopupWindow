@@ -7,6 +7,7 @@
 //
 
 #import "SecondViewController.h"
+#import "MTPopupWindow.h"
 
 @interface SecondViewController ()
 
@@ -25,5 +26,58 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (IBAction)useSafariButtonPressed:(id)sender {
+    MTPopupWindow *popup = [[MTPopupWindow alloc] init];
+    popup.usesSafari = YES;
+    popup.fileName = @"info.html";
+    [popup show];
+}
+
+- (IBAction)useDelegateButtonPressed:(id)sender {
+    MTPopupWindow *popup = [[MTPopupWindow alloc] init];
+    popup.delegate = self;
+    popup.fileName = @"more.html";
+    [popup show];
+}
+
+#pragma mark - webview delegate methods
+
+// To really see the difference between "will show" and "did show" it is helpful
+// to set the animation transistion to a longer time.
+
+- (void) didShowMTPopupWindow:(MTPopupWindow*)sender {
+    [[[UIAlertView alloc] initWithTitle:@"MTPopupWindow Delegate"
+                                message:@"MTPopupWindow Showed"
+                               delegate:self
+                      cancelButtonTitle:@"OK"
+                      otherButtonTitles:nil] show];
+}
+
+- (void) didCloseMTPopupWindow:(MTPopupWindow*)sender {
+    [[[UIAlertView alloc] initWithTitle:@"MTPopupWindow Delegate"
+                                message:@"MTPopupWindow Closed"
+                               delegate:self
+                      cancelButtonTitle:@"OK"
+                      otherButtonTitles:nil] show];
+}
+
+/*
+- (void) willShowMTPopupWindow:(MTPopupWindow*)sender {
+  [[[UIAlertView alloc] initWithTitle:@"MTPopupWindow Delegate"
+                              message:@"MTPopupWindow will show"
+                             delegate:self
+                    cancelButtonTitle:@"OK"
+                    otherButtonTitles:nil] show];
+}
+
+- (void) willCloseMTPopupWindow:(MTPopupWindow*)sender {
+  [[[UIAlertView alloc] initWithTitle:@"MTPopupWindow Delegate"
+                              message:@"MTPopupWindow will close"
+                             delegate:self
+                    cancelButtonTitle:@"OK"
+                    otherButtonTitles:nil] show];
+}
+*/
 
 @end

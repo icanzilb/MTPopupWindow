@@ -59,6 +59,8 @@ static CGSize kWindowMarginSize;
 
 @synthesize fileName = _fileName;
 @synthesize webView = _webView;
+@synthesize usesSafari = _usesSafari;
+@synthesize delegate = _delegate;
 
 + (void)initialize
 {
@@ -214,6 +216,10 @@ static CGSize kWindowMarginSize;
     MTPopupWindowCloseButton* btnClose = [MTPopupWindowCloseButton buttonInView:self];
     [btnClose addTarget:self action:@selector(closePopupWindow) forControlEvents:UIControlEventTouchUpInside];
 
+    // Attempt to alert the delegate.
+    if ([_delegate respondsToSelector:@selector(willShowMTPopupWindow:)])
+        [_delegate willShowMTPopupWindow:self];
+  
     //animate the popup window in
     [self performSelector:@selector(animatePopup:) withObject:v afterDelay:0.01];
 }
@@ -242,7 +248,7 @@ static CGSize kWindowMarginSize;
     
     //run the animations
     [UIView transitionWithView:_bgView
-                      duration:.4
+                      duration:0.4
                        options:options
                     animations:^{
                         
@@ -261,6 +267,10 @@ static CGSize kWindowMarginSize;
                         
                     } completion:^(BOOL finished) {
                         //NSLog(@"Finsihed");
+                      
+                        // Attempt to alert the delegate.
+                        if ([_delegate respondsToSelector:@selector(didShowMTPopupWindow:)])
+                            [_delegate didShowMTPopupWindow:self];
                     }];
 }
 
@@ -271,6 +281,10 @@ static CGSize kWindowMarginSize;
  */
 -(void)closePopupWindow
 {
+    // Attempt to alert the delegate.
+    if ([_delegate respondsToSelector:@selector(willCloseMTPopupWindow:)])
+        [_delegate willCloseMTPopupWindow:self];
+  
     //animation options
     UIViewAnimationOptions options =
         UIViewAnimationOptionTransitionFlipFromLeft |
@@ -279,7 +293,7 @@ static CGSize kWindowMarginSize;
     
     //animate the popup window out
     [UIView transitionWithView:_bgView
-                      duration:.4
+                      duration:0.4
                        options:options
                     animations:^{
                         
@@ -298,6 +312,10 @@ static CGSize kWindowMarginSize;
                         //remove the black backgorund
                         [_dimView removeFromSuperview];
                         _dimView = nil;
+                      
+                        // Attempt to alert the delegate.
+                        if ([_delegate respondsToSelector:@selector(didCloseMTPopupWindow:)])
+                            [_delegate didCloseMTPopupWindow:self];
                     }];
 }
 
@@ -327,6 +345,18 @@ static CGSize kWindowMarginSize;
                       otherButtonTitles: nil] show];
     
     if (_loader) [_loader removeFromSuperview];
+}
+
+-(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType;
+{
+    if (self.usesSafari) {
+      NSURL *requestURL =[request URL];
+      if (([[requestURL scheme] hasPrefix:@"http"]) && (navigationType == UIWebViewNavigationTypeLinkClicked)) {
+        return ![[UIApplication sharedApplication] openURL:requestURL];
+      }
+      return YES;
+    }
+    return YES;
 }
 
 @end

@@ -18,6 +18,20 @@
 
 #import <UIKit/UIKit.h>
 
+@class MTPopupWindow;
+
+/**
+ * Define delegate protocol that will allow users of the popup window to be
+ * notified when the popup does certian actions (open and close for now).
+ */
+@protocol MTPopupWindowDelegate <NSObject>
+@optional
+- (void) willShowMTPopupWindow:(MTPopupWindow*)sender;
+- (void) didShowMTPopupWindow:(MTPopupWindow*)sender;
+- (void) willCloseMTPopupWindow:(MTPopupWindow*)sender;
+- (void) didCloseMTPopupWindow:(MTPopupWindow*)sender;
+@end
+
 /**
  * Class to easily show popup windows in iOS apps.
  * Blocks the content behind and shows the contents of an HTML file,
@@ -59,5 +73,7 @@
 
 @property (strong, nonatomic) NSString* fileName;
 @property (strong, nonatomic) UIWebView* webView;
+@property (weak, nonatomic) id <MTPopupWindowDelegate> delegate;
+@property (nonatomic) BOOL usesSafari;
 
 @end
